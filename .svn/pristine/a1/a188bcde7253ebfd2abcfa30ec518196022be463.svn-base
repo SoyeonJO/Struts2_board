@@ -1,0 +1,31 @@
+package kr.or.ddit.admin.status.service;
+
+import java.sql.SQLException;
+
+import kr.or.ddit.admin.status.dao.IStatusDao;
+import kr.or.ddit.admin.status.dao.IStatusDaoImpl;
+
+public class IStatusServiceImpl implements IStatusService{
+	
+	private IStatusDao dao;
+	private IStatusServiceImpl() {
+		dao = IStatusDaoImpl.getInstance();
+	}
+	
+	private static IStatusService service;
+	public static IStatusService getInstance() {
+		return (service == null) ? new IStatusServiceImpl() : service;
+	}
+
+	@Override
+	public String countInsertDate(String selectdate) {
+		String cnt = null;
+		try {
+			cnt = dao.countInsertDate(selectdate);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return cnt;
+	}
+
+}

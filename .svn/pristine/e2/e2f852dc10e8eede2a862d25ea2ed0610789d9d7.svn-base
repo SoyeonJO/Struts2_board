@@ -1,0 +1,41 @@
+package kr.or.ddit.filter;
+
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+public class Filter1 implements Filter {
+
+	@Override
+	public void init(FilterConfig arg0) throws ServletException {
+		// 필터가 인스턴스화된 직후 콜백되는 메서드
+	}
+
+	@Override
+	public void destroy() {
+		// 필터가 GC(Garbage Collector)에 의해서 힙메모리 삭제 직전 콜백되는 메서드
+	}
+
+	@Override
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+		// 해당 필터의 비지니스 로직 작성
+		HttpServletRequest request = (HttpServletRequest) servletRequest;
+		HttpSession session = request.getSession();		
+		HttpServletResponse response = (HttpServletResponse) servletResponse;
+		
+		System.out.println("Filter1의 doFilter의 전처리(요청)");
+		
+		// 해당 필터에서 다른 필터의 doFilter()를 콜백된다.
+		filterChain.doFilter(servletRequest, servletResponse);
+		
+		System.out.println("Filter1의 doFilter의 후처리(응답)");
+	}
+}

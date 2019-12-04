@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap 
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="refitem">
+	<typeAlias alias="RefItemVO" type="kr.or.ddit.vo.RefItemVO" />
+	
+	<statement id="refItemList" resultClass="RefItemVO">
+		SELECT *
+		  FROM FI_REF
+		 WHERE FI_REF_NO = #ref_no# 
+	</statement>
+
+	<insert id="insertRefItem" parameterClass="RefItemVO">
+		<selectKey keyProperty="fi_ref_seq" resultClass="String">
+			SELECT REFITEM_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO FI_REF (FI_REF_SEQ, FI_REF_NO, FI_REF_NAME, FI_REF_SAVE_NAME, FI_REF_CONTENT_TYPE, FI_REF_SIZE)
+		VALUES (#fi_ref_seq#, #fi_ref_no#, #fi_ref_name#, #fi_ref_save_name#, #fi_ref_content_type#, #fi_ref_size#)
+	</insert>
+	
+	<select id="refItemInfo" parameterClass="map" resultClass="RefItemVO">
+		SELECT fi_ref_save_name
+		  FROM FI_REF
+		 WHERE FI_REF_NO = #ref_no# 
+		   and rownum = 1	
+	</select>
+</sqlMap>    

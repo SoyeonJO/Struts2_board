@@ -1,0 +1,17 @@
+package kr.or.ddit.admin.member.service;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.MemberVO;
+
+public interface IAdminMemberService {
+	
+	// 회원 조회 및 검색
+	public List<MemberVO> memberList(Map<String, String> params);
+	
+	// 페이지네이션
+	public String totalCountMember(Map<String, String> params);
+
+	
+}

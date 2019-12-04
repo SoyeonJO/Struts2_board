@@ -1,0 +1,96 @@
+package kr.or.ddit.admin.reference.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.jasper.tagplugins.jstl.core.Catch;
+
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+import kr.or.ddit.ibatis.factory.SqlMapClientFactory;
+import kr.or.ddit.vo.RefItemVO;
+import kr.or.ddit.vo.RefVO;
+
+public class IRefDaoImpl implements IRefDao {
+
+	private static IRefDao dao = new IRefDaoImpl();
+	private SqlMapClient client;
+	
+	private IRefDaoImpl(){
+		client = SqlMapClientFactory.getSqlMapClient();
+	}
+	
+	public static IRefDao getInstance(){
+		return (dao == null) ? dao = new IRefDaoImpl() : dao;
+	}
+	
+	@Override
+	public List<RefVO> refList(Map<String, String> params) throws SQLException {
+		return client.queryForList("reference.refList", params);
+	}
+
+	@Override
+	public RefVO refInfo(Map<String, String> params) throws SQLException {
+		client.update("reference.updateREFHIT", params);
+		return (RefVO) client.queryForObject("reference.refInfo", params);
+	}
+
+	@Override
+	public void insertRefInfo(RefVO refInfo) throws SQLException {
+		client.insert("reference.insertRef", refInfo);
+	}
+
+	@Override
+	public void updateRefInfo(RefVO refInfo) throws SQLException {
+		client.update("reference.updateRef", refInfo);
+	}
+
+	@Override
+	public void deleteRefInfo(Map<String, String> params) throws SQLException {
+		client.update("reference.deleteRef", params);
+	}
+
+	@Override
+	public String totalCount(Map<String, String> params) throws SQLException {
+		return (String) client.queryForObject("reference.totalCount", params);
+	}
+
+	@Override
+	public void insertRefReplyInfo(RefVO refInfo) throws SQLException {
+		
+		try{
+			client.startTransaction();
+			String ref_seq;
+			
+			if("0".intern() == refInfo.getRef_seq().intern()){
+				ref_seq = (String) client.queryForObject("reference.incrementSEQ", refInfo);
+			}else{
+				client.update("reference.updateSEQ", refInfo);
+				ref_seq = String.valueOf(Integer.parseInt(refInfo.getRef_seq()) + 1);
+			}
+			refInfo.setRef_seq(ref_seq);
+			
+			String ref_depth = String.valueOf(Integer.parseInt(refInfo.getRef_depth()) + 1);
+			refInfo.setRef_depth(ref_depth);
+			
+			client.insert("reference.insertRefReply", refInfo);
+			
+			client.commitTransaction();
+		
+		}catch(SQLException e){
+			client.endTransaction();
+		}
+	}
+
+	@Override
+	public String getRefSeq() throws SQLException {
+		return (String) client.queryForObject("reference.getRefSeq");
+	}
+
+	@Override
+	public List<RefItemVO> getSavaName(Map<String, String> params)
+			throws SQLException {
+		return client.queryForList("reference.getSavaName", params);
+	}
+}

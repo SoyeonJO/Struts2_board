@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<!--comment -->
+	<!-- DB와 연결하는 정보를 properties파일에 설정해 놓고 이 properties파일의 내용을 읽어와 설정한다. -->
+<!-- 	<properties resource="kr/or/ddit/ibatis/config/SqlMapConfig.properties" /> jndi에서는 활용하지 않음-->
+
+	<settings cacheModelsEnabled="true" enhancementEnabled="true"
+		lazyLoadingEnabled="true" maxRequests="32" maxSessions="10"
+		maxTransactions="5" useStatementNamespaces="true" />
+	<!-- 
+		DBCP(DataBase Connection Pooling) : DB대상의 커넥션을 일정갯수 미리 생성 후 운용
+		1. 환경 명령
+		   http://commons.apache.org -> DBCP -> Download -> Apache Commons DBCP 1.4 for JDBC 4 on Java 6 -> Binaries -> commons-dbcp-1.4-bin.zip 파일 다운로드
+		                             -> Pool -> Download -> Apache Commons Pool 1.6 (Java 5) -> Binaries -> commons-pool-1.6-bin.zip 다운로드
+		   WEB-INF/lib폴더에 넣기   
+		   
+		JNDI(Java Naming Directory Invokation) : 커넥션 풀에 적용하면 네이밍 규칙에 따라 커넥션을 요청처에 제공(DBCP 기본적용)	                           
+	 -->
+	<transactionManager type="JDBC">
+<!-- 		<dataSource type="SIMPLE"> -->
+<!-- 			<property name="JDBC.Driver" value="${driver}" /> -->
+<!-- 			<property name="JDBC.ConnectionURL" value="${url}" /> -->
+<!-- 			<property name="JDBC.Username" value="${username}" /> -->
+<!-- 			<property name="JDBC.Password" value="${password}" /> -->
+<!-- 		</dataSource> -->
+
+
+<!-- 		org.apache.com.dbcp.DataSource {                             -->
+<!-- 			private String driverClassName;                          -->
+			
+<!-- 			public void setDriverClassName(String driverClassName) { -->
+<!-- 				this.driverClassName = driverClassName;              -->
+<!-- 			}                                                        -->
+<!-- 		}                                                            -->
+<!-- 		<dataSource type="DBCP"> -->
+<!-- 			<property name="driverClassName" value="${driver}"/> -->
+<!-- 			<property name="url" value="${url}"/> -->
+<!-- 			<property name="username" value="${username}"/> -->
+<!-- 			<property name="password" value="${password}"/> -->
+<!-- 			<property name="maxActive" value="10"/> -->
+<!-- 			<property name="maxWait" value="-1"/> -->
+<!-- 			<property name="maxIdle" value="6"/> -->
+<!-- 			<property name="removeAbandoned" value="true"/> -->
+<!-- 			<property name="removeAbandonedTimeout" value="60"/> -->
+<!-- 		</dataSource> -->
+
+
+			<!-- 운용관리가 tomcat으로 넘어감 // context.xml 생성함-->
+			<dataSource type="JNDI">
+				<property name="DBJndiContext" value="java:comp/env/jdbc/ddit"/>
+			</dataSource>
+			
+	</transactionManager>
+	
+	<sqlMap resource="kr/or/ddit/ibatis/mapper/member.xml"/>
+	<sqlMap resource="kr/or/ddit/ibatis/mapper/zipcode.xml"/>
+	<sqlMap resource="kr/or/ddit/ibatis/mapper/freeboard.xml"/>
+	<sqlMap resource="kr/or/ddit/ibatis/mapper/fileitem.xml"/>
+</sqlMapConfig>

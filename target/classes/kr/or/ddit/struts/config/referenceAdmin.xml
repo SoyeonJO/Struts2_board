@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="adminRefPKG" extends="struts-default,tiles-default" namespace="/admin/reference">
+	
+		<action name="refList" class="kr.or.ddit.admin.reference.controller.RefListAction">
+			<result>/WEB-INF/views/admin/reference/refList.jsp</result>
+		</action>
+		<action name="refForm">
+			<result>/WEB-INF/views/admin/reference/refForm.jsp</result>			
+		</action>
+		<action name="insertRef" class="kr.or.ddit.admin.reference.controller.InsertRefAction" method="fileUploadMethod">
+			<interceptor-ref name="fileUpload"></interceptor-ref>
+			<interceptor-ref name="modelDriven"></interceptor-ref>
+			<interceptor-ref name="params"></interceptor-ref>
+			<result type="redirectAction">
+				<param name="namesapce">/admin/reference</param>
+				<param name="actionName">refList</param>
+			</result>
+		</action>
+		
+		<action name="refView" class="kr.or.ddit.admin.reference.controller.RefViewAction" method="refInfo">
+			<result>/WEB-INF/views/admin/reference/refView.jsp</result>
+		</action>
+		<action name="deleteRef" class="kr.or.ddit.admin.reference.controller.DeleteRefAction">
+			<interceptor-ref name="modelDriven"></interceptor-ref>
+			<interceptor-ref name="params"></interceptor-ref>
+			<result type="redirectAction">
+				<param name="namespace">/admin/reference</param>
+				<param name="actionName">refList</param>
+			</result>
+		</action>
+		<action name="updateRef" class="kr.or.ddit.admin.reference.controller.UpdateRefAction">
+			<interceptor-ref name="modelDriven"></interceptor-ref>
+			<interceptor-ref name="params"></interceptor-ref>
+			<result type="redirectAction">
+				<param name="namespace">/admin/reference</param>
+				<param name="actionName">refList</param>
+			</result>
+		</action>
+		<action name="refDownload" class="kr.or.ddit.admin.reference.controller.RefItemAction" method="fileDownloadMethod">
+			<result type="stream">
+				<param name="contentType">binary/octet-stream</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">${contentDisposition}</param>
+				<param name="contentLength">${contentLength}</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>
+		
+		<action name="refReply">			
+			<result>/WEB-INF/views/admin/reference/refReplyForm.jsp</result>
+		</action>
+		
+		<action name="insertRefReply" class="kr.or.ddit.admin.reference.controller.InsertRefReplyAction">
+			<interceptor-ref name="modelDriven"></interceptor-ref>
+			<interceptor-ref name="params"></interceptor-ref>
+			<result type="redirectAction">
+				<param name="namespace">/admin/reference</param>
+				<param name="actionName">refList</param>
+			</result>
+		</action>
+		
+	</package>
+	
+</struts>

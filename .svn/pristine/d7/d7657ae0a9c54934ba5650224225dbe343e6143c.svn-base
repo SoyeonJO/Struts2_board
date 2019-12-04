@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="memberPKG" extends="struts-default" namespace="/member">
+		<action name="memberList" class="kr.or.ddit.member.controller.MemberListAction">
+			<result>/WEB-INF/views/user/member/memberList.jsp</result>
+		</action>
+		<action name="memberView" class="kr.or.ddit.member.controller.MemberViewAction" method="memberInfo">
+			<result>/WEB-INF/views/user/member/memberView.jsp</result>
+		</action>
+		<action name="updateMemberInfo" class="kr.or.ddit.member.controller.UpdateMemberAction">
+			<interceptor-ref name="modelDriven"></interceptor-ref> <!-- 대량의 쿼리 스트링 세팅 -->
+			<interceptor-ref name="params"></interceptor-ref> <!-- modelDriven 사용시 필요함 --> 
+			<result type="redirectAction">
+				<param name="namespace">/member</param>
+				<param name="actionName">memberList</param>
+			</result>
+		</action>
+		<action name="deleteMemberInfo" class="kr.or.ddit.member.controller.DeleteMemberAction">
+			<result name="loginForm" type="redirect">
+				<![CDATA[/join/loginForm.do?message=${message}]]>
+			</result>
+		</action>
+		
+		<action name="memberForm">
+			<result>/WEB-INF/views/user/member/memberForm.jsp</result>
+		</action>
+		
+		<action name="insertMember" class="kr.or.ddit.member.controller.InsertMemberAction">
+			<interceptor-ref name="modelDriven"></interceptor-ref>
+			<interceptor-ref name="params"></interceptor-ref>
+			<result type="redirect">
+				<![CDATA[/join/loginForm.do?message=${message}]]>
+			</result>
+		</action>
+		
+		<action name="idCheck" class="kr.or.ddit.member.controller.IdCheckAction"></action>
+	</package>	
+	
+</struts>

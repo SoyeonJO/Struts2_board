@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<!-- http://localhost/DrugStoreStruts/user/join/loginForm.do -->
+	<package name="joinUserPKG" extends="commonPKG" namespace="/user/join">
+		<action name="loginForm">
+			<interceptor-ref name="cryptoInterceptor"></interceptor-ref>
+			<result>/WEB-INF/views/user/join/loginForm.jsp</result>
+		</action>
+		
+		<action name="loginCheck" class="kr.or.ddit.user.join.controller.LoginCheckAction">
+			<result name="loginForm" type="redirect">
+				<![CDATA[/user/join/loginForm.do?message=${message}]]>
+			</result>
+			<result name="noticeList" type="redirectAction">
+				<param name="namespace">/user/notice</param>
+				<param name="actionName">noticeList</param>
+			</result>
+		</action>
+		
+		<action name="logout" class="kr.or.ddit.user.join.controller.LogoutAction">
+			<result type="redirect">
+				<![CDATA[/user/join/loginForm.do?message=${message}]]>
+			</result>
+		</action>
+		
+		
+	</package>
+	
+</struts>

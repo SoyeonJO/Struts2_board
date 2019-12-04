@@ -1,0 +1,36 @@
+package kr.or.ddit.user.freeboard.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+
+
+import kr.or.ddit.user.freeboard.service.FreeboardServiceImpl;
+import kr.or.ddit.user.freeboard.service.IfreeboardService;
+import kr.or.ddit.vo.FreeboardVO;
+
+public class FreeboardListAction {
+     private List<FreeboardVO> freeboardList;
+     public String execute(){
+    	 
+    	 
+    	 Map<String, String> params = new HashMap<String, String>();
+    	 
+    	 params.put("startCount", "5");
+    	 params.put("endCount", "1");
+    	
+    	 
+    	 IfreeboardService service = FreeboardServiceImpl.getInstance();
+    	 this.freeboardList = service.FreeboardList(params);
+    	
+    	 
+    	 return "success";
+     }
+	public List<FreeboardVO> getFreeboardList() {
+		return freeboardList;
+	}
+     
+     
+}

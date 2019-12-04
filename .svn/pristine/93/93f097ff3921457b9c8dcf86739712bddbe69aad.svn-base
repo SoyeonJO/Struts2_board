@@ -1,0 +1,79 @@
+package kr.or.ddit.admin.member.service;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.admin.member.dao.IAdminMemberDao;
+import kr.or.ddit.admin.member.dao.IAdminMemberDaoImpl;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.ZipCodeVO;
+
+public class IAdminMemberServiceImpl implements IAdminMemberService{
+	
+	private IAdminMemberDao dao;
+	private IAdminMemberServiceImpl() {
+		dao = IAdminMemberDaoImpl.getInstance();
+	}
+	
+	private static IAdminMemberService service;
+	public static IAdminMemberService getInstance() {
+		return (service == null) ? new IAdminMemberServiceImpl() : service;
+	}
+
+	@Override
+	public List<MemberVO> memberList(Map<String, String> params) {
+		List<MemberVO> list = null;
+		try {
+			list = dao.memberList(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public String totalCountMember(Map<String, String> params) {
+		String cnt = null;
+		try {
+			cnt = dao.totalCountMember(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return cnt;
+	}
+
+	@Override
+	public List<ZipCodeVO> selectSido() {
+		List<ZipCodeVO> list = null;
+		try {
+			list = dao.selectSido();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<ZipCodeVO> selectGugun(String sido) {
+		List<ZipCodeVO> list = null;
+		try {
+			list = dao.selectGugun(sido);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public MemberVO memberInfo(Map<String, String> params) {
+		MemberVO info = null;
+		try {
+			info = dao.memberInfo(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return info;
+	}
+
+}

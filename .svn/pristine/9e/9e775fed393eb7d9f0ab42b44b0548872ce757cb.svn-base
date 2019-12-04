@@ -1,0 +1,28 @@
+package kr.or.ddit.user.notice.controller;
+
+import kr.or.ddit.user.notice.service.INoticeService;
+import kr.or.ddit.user.notice.service.INoticeServiceImpl;
+import kr.or.ddit.vo.NoticeVO;
+
+import com.opensymphony.xwork2.ModelDriven;
+
+public class NoticeInsertAction implements ModelDriven<NoticeVO> {
+
+	private NoticeVO noticeInfo;
+	
+	public String execute(){
+		
+		INoticeService service = INoticeServiceImpl.getInstance();
+		service.insertNoticeInfo(this.noticeInfo);
+		
+		return "success";
+	}
+	
+	@Override
+	public NoticeVO getModel() {
+		this.noticeInfo = new NoticeVO();
+		
+		return noticeInfo;
+	}
+
+}

@@ -1,0 +1,116 @@
+package kr.or.ddit.vo;
+
+import java.util.Date;
+
+public class ProdVO {
+	private String prod_id;       // 상품코드
+	private String prod_name;     // 상품 이름
+	private String prod_lgu;      // 상품 분류 번호
+	private String prod_buyer;    // 거래처 코드
+	private int prod_cost;        // 매입가
+	private int prod_price;       // 소비자가
+	private int prod_sale;        // 판매가
+	private String prod_outline;  // 상품설명
+	private String prod_detail;   //상품 상세 설명
+	private String prod_img;   //상품 상세 설명
+	private int prod_qtyin;       // 총 입고 수량
+	private int prod_totalstock;  // 재고 수량 
+	private int prod_properstock; // 안전 재고 수량
+	private String prod_insdate;  // 입고일자
+	private String prod_delete;   // 제품 삭제
+	
+	public String getProd_delete() {
+		return prod_delete;
+	}
+	public void setProd_delete(String prod_delete) {
+		this.prod_delete = prod_delete;
+	}
+	public String getProd_id() {
+		return prod_id;
+	}
+	public void setProd_id(String prod_id) {
+		this.prod_id = prod_id;
+	}
+	public String getProd_name() {
+		return prod_name;
+	}
+	public void setProd_name(String prod_name) {
+		this.prod_name = prod_name;
+	}
+	public String getProd_lgu() {
+		return prod_lgu;
+	}
+	public void setProd_lgu(String prod_lgu) {
+		this.prod_lgu = prod_lgu;
+	}
+	public String getProd_buyer() {
+		return prod_buyer;
+	}
+	public void setProd_buyer(String prod_buyer) {
+		this.prod_buyer = prod_buyer;
+	}
+	public int getProd_cost() {
+		return prod_cost;
+	}
+	public void setProd_cost(int prod_cost) {
+		this.prod_cost = prod_cost;
+	}
+	public int getProd_price() {
+		return prod_price;
+	}
+	public void setProd_price(int prod_price) {
+		this.prod_price = prod_price;
+	}
+	public int getProd_sale() {
+		return prod_sale;
+	}
+	public void setProd_sale(int prod_sale) {
+		this.prod_sale = prod_sale;
+	}
+	public String getProd_outline() {
+		return prod_outline;
+	}
+	public void setProd_outline(String prod_outline) {
+		this.prod_outline = prod_outline;
+	}
+	public String getProd_detail() {
+		return prod_detail;
+	}
+	public void setProd_detail(String prod_detail) {
+		this.prod_detail = prod_detail;
+	}
+	public int getProd_qtyin() {
+		return prod_qtyin;
+	}
+	public void setProd_qtyin(int prod_qtyin) {
+		this.prod_qtyin = prod_qtyin;
+	}
+	public int getProd_totalstock() {
+		return prod_totalstock;
+	}
+	public void setProd_totalstock(int prod_totalstock) {
+		this.prod_totalstock = prod_totalstock;
+	}
+	public int getProd_properstock() {
+		return prod_properstock;
+	}
+	public void setProd_properstock(int prod_properstock) {
+		this.prod_properstock = prod_properstock;
+	}
+	public String getProd_insdate() {
+		return prod_insdate;
+	}
+	public void setProd_insdate(String prod_insdate) {
+		this.prod_insdate = prod_insdate;
+	}
+	public String getProd_img() {
+		return prod_img;
+	}
+	public void setProd_img(String prod_img) {
+		this.prod_img = prod_img;
+	}
+	
+	
+	
+	
+}

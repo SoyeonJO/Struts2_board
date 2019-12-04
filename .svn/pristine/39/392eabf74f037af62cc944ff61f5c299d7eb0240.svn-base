@@ -1,0 +1,37 @@
+package kr.or.ddit.user.freeboard.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.ServletActionContext;
+
+import kr.or.ddit.user.freeboard.service.FreeboardServiceImpl;
+import kr.or.ddit.user.freeboard.service.IfreeboardService;
+import kr.or.ddit.vo.FreeboardVO;
+
+public class FreeboardReplyAction {
+	
+	
+    public String execute(){
+    	
+     HttpServletRequest request = ServletActionContext.getRequest();
+
+	
+	String bo_no = request.getParameter("bo_no"); // rnum은 글이 삭제되면 바뀌니까 bo_no기준으로 
+
+	Map<String, String> params = new HashMap<String, String>();
+	IfreeboardService service = FreeboardServiceImpl.getInstance();
+	
+	params.put("bo_no", bo_no);
+	
+	
+	FreeboardVO freeboardInfo = service.freeboardInfo(params);
+	 
+	 request.setAttribute("freeboardInfo", freeboardInfo); 
+	
+	
+	return "success";
+    }
+}

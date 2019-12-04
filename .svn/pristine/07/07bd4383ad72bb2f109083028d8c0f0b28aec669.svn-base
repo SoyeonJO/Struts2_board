@@ -1,0 +1,22 @@
+package kr.or.ddit.user.freeboard.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.fileupload.FileItem;
+
+import kr.or.ddit.vo.FileItemVO;
+import kr.or.ddit.vo.FreeboardVO;
+
+public interface IfreeboardService {
+       
+	public List<FreeboardVO> FreeboardList (Map<String, String> params);
+	public FreeboardVO freeboardInfo(Map<String, String> params);
+	public void updateInfo(FreeboardVO freeboardInfo);
+	public void deleteInfo(Map<String, String> params);
+	public String insertInfo(FreeboardVO freeboardInfo);
+	
+	public String totalCount (Map<String, String> params);
+	public void insertReInfo(FreeboardVO freeboardInfo);
+
+}

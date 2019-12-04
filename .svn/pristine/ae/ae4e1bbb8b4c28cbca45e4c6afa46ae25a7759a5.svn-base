@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="adminTumbnailPKG" extends="struts-default" namespace="/admin/thumbnailBoard">
+		<action name="thumbnailBoardList" class="kr.or.ddit.admin.thumbnailboard.controller.ThumbnailBoardList">
+			<result>/WEB-INF/viewsadmin/thumbnailboard/thumbnailBoardList.jsp</result>
+		</action>
+<!-- 		<action name="thumbnailBoardForm"> -->
+<!-- 			<result type="tiles">user/thumbnailboard/thumbnailBoardForm</result> -->
+<!-- 		</action> -->
+<!-- 		<action name="insertThumbnail" class="kr.or.ddit.thumbnailboard.controller.InsertThumbnailBoard" method="fileUploadMethod"> -->
+<!-- 			<interceptor-ref name="fileUpload"></interceptor-ref> -->
+<!-- 			<interceptor-ref name="modelDriven"></interceptor-ref> -->
+<!-- 			<interceptor-ref name="params"></interceptor-ref> -->
+<!-- 			<result type="redirectAction"> -->
+<!-- 				<param name="namespace">/user/thumbnailBoard</param> -->
+<!-- 				<param name="actionName">thumbnailBoardList</param> -->
+<!-- 				<param name="message">${message}</param> -->
+<!-- 			</result> -->
+<!-- 		</action> -->
+<!-- 		<action name="thumbnailBoardView" class="kr.or.ddit.thumbnailboard.controller.ThumbnailBoardView"> -->
+<!-- 			<result type="tiles">user/thumbnailboard/thumbnailBoardView</result> -->
+<!-- 		</action> -->
+<!-- 		<action name="updateThumbnail" class="kr.or.ddit.thumbnailboard.controller.UpdateThumbnailBoard"> -->
+<!-- 			<interceptor-ref name="modelDriven"></interceptor-ref> -->
+<!-- 			<interceptor-ref name="params"></interceptor-ref> -->
+<!-- 			<result type="redirectAction"> -->
+<!-- 				<param name="namespace">/user/thumbnailBoard</param> -->
+<!-- 				<param name="actionName">thumbnailBoardList</param> -->
+<!-- 				<param name="message">${message}</param> -->
+<!-- 			</result> -->
+<!-- 		</action> -->
+<!-- 		<action name="deleteThumbnail" class="kr.or.ddit.thumbnailboard.controller.DeleteThumbnailBoard"> -->
+<!-- 			<result type="redirectAction"> -->
+<!-- 				<param name="namespace">/user/thumbnailBoard</param> -->
+<!-- 				<param name="actionName">thumbnailBoardList</param> -->
+<!-- 				<param name="message">${message}</param> -->
+<!-- 			</result> -->
+<!-- 		</action> -->
+<!-- 		<action name="thumbnailDownload" class="kr.or.ddit.thumbnailboard.controller.DownloadThumbnail" method="fileDownloadMethod"> -->
+<!-- 			<result type="stream"> -->
+<!-- 				<param name="contentType">binary/octet-stream</param> -->
+<!-- 				<param name="inputName">inputStream</param> -->
+<!-- 				<param name="contentDisposition">${contentDisposition}</param> -->
+<!-- 				<param name="contentLength">${contentLength}</param> -->
+<!-- 				<param name="bufferSize">4096</param> -->
+<!-- 			</result> -->
+<!-- 		</action> -->
+	</package>
+	
+</struts>

@@ -1,0 +1,8 @@
+package kr.or.ddit.admin.status.service;
+
+public interface IStatusService {
+
+	// 회원가입 월 통계
+	public String countInsertDate(String selectdate);
+	
+}

@@ -1,0 +1,101 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+	.h:hover{
+		color : lightgreen;
+	}
+	img{
+		max-width : 100%;
+  		height: 300px;
+	}
+	.imgBox{
+ 		height : 350px; 
+		text-align: center;
+	}
+	#abc{
+		margin: 0 auto;
+		width : 80%;
+	}
+</style>
+</head>
+<body>
+	<div id="abc">
+		<h4 class="box-heading">섬네일 이미지형 게시판</h4>
+		<c:if test="${empty thumbnailList }">
+			<div><font color="red">등록된 게시물이 없습니다.</font></div>
+		</c:if>
+		<c:if test="${!empty thumbnailList }">
+			<div class="row">
+				<c:forEach items="${thumbnailList}" var="info">
+					<div class="col-sm-6 col-md-3">
+						<div class="thumbnail">
+							<c:if test="${!empty info.save_name }">
+								<div class="imgBox">
+									<img src="/files/${info.save_name }"/>
+								</div>
+							</c:if>
+							<div class="caption">
+								<h4 class="box-heading">글번호 : ${info.rnum }</h4>
+								<label id="la">조회수 : ${info.tb_hit }</label>
+								<h3 class="h">${info.tb_title }</h3>
+								<input type="hidden" name="tb_no" value="${info.tb_no }"/>
+							 </div>
+						</div>
+					</div>
+				</c:forEach>
+			</div>	
+		</c:if>
+	</div>
+	${paginationContent }
+	<br>
+	<form action="" method="post" class="form-inline pull-right">
+		<input id="search_keyword" name="search_keyword" type="text" placeholder="검색어 입력..." class="form-control" />
+		<select class="form-control" name="search_keycode" >
+			<option>검색조건</option>
+			<option value="TOTAL">전체</option>
+			<option value="TITLE">제목</option>
+			<option value="CONTENT">내용</option>
+			<option value="NICKNAME">작성자</option>
+		</select>
+	    <button type="submit" class="btn btn-primary form-control">검색</button>
+	    <button type="button" class="btn btn-info form-control" id="registBTN">게시글 등록</button>
+	</form>
+</body>
+<script type="text/javascript">
+	$(function(){
+		$('#registBTN').click(function(){
+			if(eval('${!empty LOGIN_MEMBERINFO}')){
+				$(location).attr('href', '${pageContext.request.contextPath }/user/thumbnailBoard/thumbnailBoardForm.do');
+			}else{
+				BootstrapDialog.show({
+			 	    title: '알림',
+			 	    message: '로그인을 해주세요'
+			 	});
+			}
+		});
+		
+		$('.thumbnail').click(function(){
+			tb_no = $(this).find('input[name=tb_no]').val();
+			
+			$(location).attr('href', '${pageContext.request.contextPath }/user/thumbnailBoard/thumbnailBoardView.do?tb_no=' + tb_no + '&currentPage=${param.currentPage}&search_keyword=${search_keyword}&search_keycode=${search_keycode}');
+		});
+		
+		if(eval('${!empty param.message}')){
+			BootstrapDialog.show({
+		 	    title: '알림',
+		 	    message: '${param.message}'
+		 	});
+		}
+		
+		$('form').submit(function(){
+			$(this).attr('action', '${pageContext.request.contextPath }/user/thumbnailBoard/thumbnailBoardList.do');
+		});
+	});
+</script>
+</html>

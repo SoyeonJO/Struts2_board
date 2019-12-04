@@ -1,0 +1,18 @@
+package kr.or.ddit.admin.member.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.MemberVO;
+
+public interface IAdminMemberDao {
+	
+	// 회원 조회 및 검색
+	public List<MemberVO> memberList(Map<String, String> params) throws SQLException;
+	
+	// 페이지네이션
+	public String totalCountMember(Map<String, String> params) throws SQLException;
+
+	
+}

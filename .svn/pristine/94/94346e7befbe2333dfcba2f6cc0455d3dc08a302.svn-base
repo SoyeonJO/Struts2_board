@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap 
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="reference">
+   <typeAlias alias="refVO" type="kr.or.ddit.vo.RefVO"/>
+   
+   <resultMap class="refVO" id="refResultMap">
+      <result property="ref_no" column="ref_no" />
+      <result property="ref_mem_id" column="ref_mem_id" />
+      <result property="ref_title" column="ref_title" />
+      <result property="ref_nickname" column="ref_nickname" />
+      <result property="ref_pwd" column="ref_pwd" />
+      <result property="ref_mail" column="ref_mail" />
+      <result property="ref_ip" column="ref_ip" />
+      <result property="ref_content" column="ref_content" />
+      <result property="ref_hit" column="ref_hit" />
+      <result property="ref_reg_date" column="ref_reg_date" />
+      <result property="ref_status" column="ref_status" />
+      <result property="ref_group" column="ref_group" />
+      <result property="ref_seq" column="ref_seq" />
+      <result property="ref_depth" column="ref_depth" />
+      <result property="items" column="ref_no" select="refitem.refItemList"/>
+  
+</resultMap>
+   
+   <sql id="selectAll">
+      SELECT *
+        FROM REF
+         WHERE REF_STATUS = 'y'
+   </sql>   
+   
+   <sql id="searchCondition">
+      <dynamic prepend="AND">
+         <isNotEmpty property="search_keyword" open="(" close=")">
+            <isEqual property="search_keycode" compareValue="TOTAL">
+                  REF_TITLE LIKE '%'||#search_keyword#||'%'  
+                   OR REF_CONTENT LIKE '%'||#search_keyword#||'%'  
+                OR REF_NICKNAME LIKE '%'||#search_keyword#||'%'
+            </isEqual>
+            <isEqual property="search_keycode" compareValue="TITLE">
+               REF_TITLE LIKE '%'||#search_keyword#||'%'  
+            </isEqual>
+            <isEqual property="search_keycode" compareValue="CONTENT">
+                   REF_CONTENT LIKE '%'||#search_keyword#||'%'  
+            </isEqual>
+            <isEqual property="search_keycode" compareValue="NICKNAME">
+                REF_NICKNAME LIKE '%'||#search_keyword#||'%'
+            </isEqual>
+         </isNotEmpty>
+      </dynamic>
+   </sql>
+   
+   <select id="refList" parameterClass="map" resultClass="refVO">
+      SELECT B.*
+        FROM (SELECT ROWNUM RNUM, A.*
+               FROM (<include refid="selectAll"/>
+                    <include refid="searchCondition"/>
+                    ORDER BY REF_NO, REF_SEQ DESC) A) B
+      <![CDATA[              
+       WHERE B.RNUM <= #startCount#
+         AND B.RNUM >= #endCount#
+        ]]>
+        ORDER BY RNUM DESC
+   </select>
+   
+   <!-- 
+      from freeboard f left outer join fileitem i on(f.bo_no = i.file_bo_no) 
+    -->
+   <select id="refInfo" parameterClass="map" resultMap="refResultMap">
+      <include refid="selectAll"/> 
+         AND REF_NO = #ref_no# 
+   </select>
+
+	<select id="getRefSeq" resultClass="String">
+   		SELECT REF_SEQ.NEXTVAL FROM DUAL
+  	</select>
+
+   <insert id="insertRef" parameterClass="refVO">
+<!--       <selectKey keyProperty="ref_no" resultClass="string"> -->
+<!--          SELECT REF_SEQ.NEXTVAL FROM DUAL -->
+<!--       </selectKey> -->
+      INSERT INTO REF (REF_NO, REF_TITLE, REF_MEM_ID, REF_NICKNAME, REF_CONTENT, REF_GROUP, REF_SAVENAME )
+          VALUES (#ref_no#, #ref_title#, '#ref_mem_id#', #ref_nickname#, #ref_content#, #ref_no#, #ref_savename# )
+   </insert>
+   
+   <update id="updateREFHIT" parameterClass="map">
+      UPDATE REF
+         SET REF_HIT = REF_HIT + 1
+       WHERE REF_NO = #ref_no#  
+   </update>
+   
+   <update id="updateRef" parameterClass="refVO">
+      UPDATE REF
+         SET REF_TITLE     = #ref_title# 
+             ,REF_NICKNAME = #ref_nickname#
+             ,REF_CONTENT  = #ref_content#
+       WHERE REF_NO = #ref_no#  
+   </update>
+   
+   <update id="deleteRef" parameterClass="map">
+      UPDATE REF
+         SET REF_STATUS = 'n'
+       WHERE REF_NO = #ref_no#  
+   </update>
+   
+   <select id="totalCount" parameterClass="map" resultClass="String">
+      SELECT COUNT(*)
+        FROM REF
+       WHERE REF_STATUS = 'y'
+        <include refid="searchCondition"/>
+   </select>
+   
+   <select id="getSavaName" parameterClass="map" resultClass="java.util.HashMap">
+   		SELECT B.FI_REF_SAVE_NAME, B.FI_REF_SEQ
+   		  FROM REF A, FI_REF B
+   		 WHERE B.FI_REF_NO = A.REF_NO
+   		   AND B.FI_REF_NO = #ref_no#
+   </select> 
+   
+   <select id="incrementSEQ" parameterClass="refVO" resultClass="String">
+      SELECT MAX(REF_SEQ) +1
+        FROM REF
+       WHERE REF_STATUS = 'y' 
+         AND REF_GROUP = #ref_group#
+   </select>
+   
+   <update id="updateSEQ" parameterClass="refVO">
+      UPDATE REF
+         SET REF_SEQ = REF_SEQ +1
+       WHERE REF_STATUS = 'y' 
+         AND REF_GROUP = #ref_group#
+         AND REF_SEQ = #ref_seq#
+   </update>
+   
+   <insert id="insertRefReply" parameterClass="refVO">
+		<selectKey keyProperty="ref_no" >
+			SELECT REF_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO REF(REF_NO
+							,REF_TITLE
+							,REF_MEM_ID
+							,REF_NICKNAME
+							,REF_CONTENT
+							,REF_GROUP
+							,REF_SEQ
+							,REF_DEPTH
+							)
+					VALUES(#ref_no#
+						,#ref_title#
+						,'a001'
+						,#ref_nickname#
+						,#ref_content#
+						,#ref_group#
+						,#ref_seq#
+						,#ref_depth#
+						)
+	</insert>
+   
+</sqlMap>    

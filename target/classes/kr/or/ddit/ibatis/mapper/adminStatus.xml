@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap 
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="adminStatus">
+	<typeAlias alias="memVO" type="kr.or.ddit.vo.MemberVO"/>
+	<typeAlias alias="bVO" type="kr.or.ddit.vo.BoardVO"/>
+	
+	<select id="countInsertDate" parameterClass="string" resultClass="string">
+		SELECT count(*) 
+  		  FROM MEMBER
+ 		 WHERE SUBSTR(MEM_REG_DATE, 6,2) = #selectdate#
+	</select>
+	
+	<select id="countBoard" resultClass="bVO">
+		SELECT
+    		(SELECT COUNT(*) FROM FREEBOARD) FREEBOARD,
+    		(SELECT COUNT(*) FROM THUMBNAILBOARD) THUMBNAIL,
+    		(SELECT COUNT(*) FROM NOTICE) NOTICE,
+    		(SELECT COUNT(*) FROM REF) REF
+		 FROM DUAL
+	</select>
+</sqlMap>    

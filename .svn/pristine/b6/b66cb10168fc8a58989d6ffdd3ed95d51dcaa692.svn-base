@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="refPKG" extends="struts-default,tiles-default" namespace="/user/reference">
+	
+		<action name="refList" class="kr.or.ddit.user.reference.controller.RefListAction">
+			<result type="tiles">user/reference/refList</result>
+		</action>
+	</package>
+	
+</struts>

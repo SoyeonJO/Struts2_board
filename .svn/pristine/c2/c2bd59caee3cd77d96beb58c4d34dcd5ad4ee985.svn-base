@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap 
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="thumbnailboard">
+   <typeAlias alias="thumbnailVO" type="kr.or.ddit.vo.ThumbnailVO"/>
+   
+   <resultMap class="thumbnailVO" id="thumbnailResultMap">
+      <result property="tb_no" column="tb_no" />
+      <result property="tb_title" column="tb_title" />
+      <result property="tb_writer" column="tb_writer" />
+      <result property="tb_nickname" column="tb_nickname" />
+      <result property="tb_pwd" column="tb_pwd" />
+      <result property="tb_mail" column="tb_mail" />
+      <result property="tb_ip" column="tb_ip" />
+      <result property="tb_content" column="tb_content" />
+      <result property="tb_hit" column="tb_hit" />
+      <result property="tb_reg_date" column="tb_reg_date" />
+      <result property="tb_status" column="tb_status" />
+      <result property="save_name" column="save_name" />
+      <result property="items" column="tb_no" select="thumbnailitem.thumbnailItemList"/>
+   </resultMap>
+   
+   <sql id="selectAll">
+      SELECT *
+        FROM THUMBNAILBOARD
+         WHERE TB_STATUS = 'y'
+   </sql>   
+   
+   <sql id="searchCondition">
+      <dynamic prepend="AND">
+         <isNotEmpty property="search_keyword" open="(" close=")">
+            <isEqual property="search_keycode" compareValue="TOTAL">
+                  TB_TITLE LIKE '%'||#search_keyword#||'%'  
+                   OR TB_CONTENT LIKE '%'||#search_keyword#||'%'  
+                OR TB_NICKNAME LIKE '%'||#search_keyword#||'%'
+            </isEqual>
+            <isEqual property="search_keycode" compareValue="TITLE">
+               TB_TITLE LIKE '%'||#search_keyword#||'%'  
+            </isEqual>
+            <isEqual property="search_keycode" compareValue="CONTENT">
+               TB_CONTENT LIKE '%'||#search_keyword#||'%'  
+            </isEqual>
+            <isEqual property="search_keycode" compareValue="NICKNAME">
+               TB_NICKNAME LIKE '%'||#search_keyword#||'%'
+            </isEqual>
+         </isNotEmpty>
+      </dynamic>
+   </sql>
+   
+   <select id="thumbnailList" parameterClass="map" resultClass="thumbnailVO">
+      SELECT B.*
+        FROM (SELECT ROWNUM RNUM, A.*
+               FROM (<include refid="selectAll"/>
+                    <include refid="searchCondition"/>
+                    ORDER BY TB_NO DESC) A ) B
+      <![CDATA[               
+       WHERE B.RNUM <= #startCount#
+         AND B.RNUM >= #endCount#
+        ]]>
+        ORDER BY RNUM DESC
+   </select>
+   
+   <select id="thumbnailView" parameterClass="map" resultMap="thumbnailResultMap">
+      <include refid="selectAll"/> 
+         AND TB_NO = #tb_no# 
+   </select>
+   
+   <select id="getTbSeq" resultClass="String">
+   		SELECT THUMBNAILBOARD_SEQ.NEXTVAL FROM DUAL
+   </select>
+
+   <insert id="insertThumbnailboard" parameterClass="thumbnailVO">
+<!--       <selectKey keyProperty="tb_no" resultClass="String"> -->
+<!--          SELECT THUMBNAILBOARD_SEQ.NEXTVAL FROM DUAL -->
+<!--       </selectKey> -->
+      INSERT INTO THUMBNAILBOARD (TB_NO, TB_TITLE, TB_WRITER, TB_NICKNAME, TB_PWD, TB_MAIL, TB_IP, TB_CONTENT, SAVE_NAME)
+          VALUES (#tb_no#, #tb_title#, 'a001', #tb_nickname#, #tb_pwd#, #tb_mail#, #tb_ip#, #tb_content#, #save_name#)
+   </insert>
+   
+   <update id="updateBOHIT" parameterClass="map">
+      UPDATE THUMBNAILBOARD
+         SET TB_HIT = TB_HIT + 1
+       WHERE TB_NO = #tb_no#  
+   </update>
+   
+   <update id="updateThumbnailBoard" parameterClass="thumbnailVO">
+      UPDATE THUMBNAILBOARD
+         SET TB_TITLE     = #tb_title# 
+             ,TB_NICKNAME = #tb_nickname#
+             ,TB_MAIL     = #tb_mail#
+             ,TB_CONTENT  = #tb_content#
+             ,TB_IP       = #tb_ip# 
+       WHERE TB_NO = #tb_no#  
+   </update>
+   
+   <update id="deleteThumbnailBoard" parameterClass="map">
+      UPDATE THUMBNAILBOARD
+         SET TB_STATUS = 'n'
+       WHERE TB_NO = #tb_no#  
+   </update>
+   
+   <select id="totalCount" parameterClass="map" resultClass="String">
+      SELECT COUNT(*)
+        FROM THUMBNAILBOARD
+       WHERE tb_STATUS = 'y'
+        <include refid="searchCondition"/>
+   </select>
+   
+   <select id="getSaveName" parameterClass="map" resultClass="java.util.HashMap">
+   		select B.tbi_save_name, B.tbi_seq
+  		  from thumbnailboard A, thumbnailitem B
+ 		 where B.tbi_tb_no = A.tb_no
+  		   and B.tbi_tb_no = #tb_no#
+   </select>
+   
+</sqlMap>    

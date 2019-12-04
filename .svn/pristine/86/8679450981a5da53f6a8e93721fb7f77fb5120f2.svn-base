@@ -1,0 +1,114 @@
+package kr.or.ddit.thumbnailboard.controller;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+
+import kr.or.ddit.global.GlobalConstant;
+import kr.or.ddit.thumbnailboard.service.IThumbnailBoardService;
+import kr.or.ddit.thumbnailboard.service.IThumbnailBoardServiceImpl;
+import kr.or.ddit.thumbnailitem.service.IThumbnailItemService;
+import kr.or.ddit.thumbnailitem.service.IThumbnailItemServiceImpl;
+import kr.or.ddit.vo.ThumbnailItemVO;
+import kr.or.ddit.vo.ThumbnailVO;
+
+import com.opensymphony.xwork2.ModelDriven;
+
+public class InsertThumbnailBoard implements ModelDriven<ThumbnailVO>{
+	private ThumbnailVO thumbnailInfo;
+	private String message;
+	private String fileName;
+	private List<File> files;
+	private List<String> fileNames;
+	private String fileSaveName;
+	
+	public String fileUploadMethod(){
+		
+		this.files = this.thumbnailInfo.getFiles();
+		this.fileNames = this.thumbnailInfo.getFilesFileName();
+		
+		IThumbnailBoardService service = IThumbnailBoardServiceImpl.getInstance();
+		
+		List<ThumbnailItemVO> tbiList = new ArrayList<ThumbnailItemVO>();
+		
+		ThumbnailItemVO tbi = null;
+		
+		String tb_no = service.getTbSeq(); 
+		
+		thumbnailInfo.setTb_no(tb_no);
+		
+		for(int i=0; i<this.fileNames.size(); i++){
+			tbi = new ThumbnailItemVO();
+			
+			tbi.setTbi_tb_no(tb_no);
+			
+			File baseFile = this.files.get(i);
+			
+			String name = this.fileNames.get(i);
+			List<String> contentType = thumbnailInfo.getFilesContentType();
+			long size = baseFile.length();
+			
+			tbi.setTbi_name(name);
+			tbi.setTbi_content_type(contentType.get(i));
+			tbi.setTbi_size(String.valueOf(size));
+			
+			String baseName = FilenameUtils.getBaseName(name);
+			String extension = FilenameUtils.getExtension(name);
+			
+			String genID = UUID.randomUUID().toString().replace("-", "");
+			
+			this.fileSaveName = baseName + "_" + genID + "." + extension;
+			
+			tbi.setTbi_save_name(this.fileSaveName);
+			
+			File saveFile = new File(GlobalConstant.FILE_PATH, this.fileSaveName);
+			
+			tbiList.add(tbi);
+			if(baseFile.length() > 0){
+				try {
+					this.fileName = fileNames.get(i);
+					FileUtils.copyFile(baseFile, saveFile);
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		
+		this.thumbnailInfo.setSave_name(this.fileSaveName);
+		
+		
+		service.insertThumbnailBoard(this.thumbnailInfo);
+		
+		IThumbnailItemService itemService = IThumbnailItemServiceImpl.getInstance();
+		itemService.insertThumbnailItemInfo(tbiList);
+		
+		return "success";
+	}
+
+	@Override
+	public ThumbnailVO getModel() {
+		this.thumbnailInfo = new ThumbnailVO();
+		return this.thumbnailInfo;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+	public String getFileSaveName() {
+		return fileSaveName;
+	}
+
+}

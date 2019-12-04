@@ -1,0 +1,127 @@
+package kr.or.ddit.user.notice.controller;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+
+import kr.or.ddit.global.GlobalConstant;
+import kr.or.ddit.user.notice.service.INoticeService;
+import kr.or.ddit.user.notice.service.INoticeServiceImpl;
+import kr.or.ddit.user.noticeitem.service.INoticeItemService;
+import kr.or.ddit.user.noticeitem.service.INoticeItemServiceImpl;
+import kr.or.ddit.vo.NoticeItemVO;
+import kr.or.ddit.vo.NoticeVO;
+
+import com.opensymphony.xwork2.ModelDriven;
+
+public class NoticeInsertAction implements ModelDriven<NoticeVO> {
+
+	private NoticeVO noticeInfo;
+	private String message;
+	private String fileName;
+	private List<File> files;
+	private List<String> fileNames;
+	private String fileSaveName;
+	
+	public String fileUploadMethod(){
+		
+		this.files = this.noticeInfo.getFiles();
+		this.fileNames = this.noticeInfo.getFilesFileName();
+		
+		INoticeService service = INoticeServiceImpl.getInstance();
+		
+		List<NoticeItemVO> noticeList = new ArrayList<NoticeItemVO>();
+		
+		NoticeItemVO noticeitem = null;
+		
+		if(this.fileNames != null){
+			
+    		String notice_no = service.getnoticeSeq();
+	
+    		noticeInfo.setNotice_no(notice_no);
+    		
+    		for(int i=0; i<this.fileNames.size(); i++){
+    			noticeitem = new NoticeItemVO();
+    			
+    			noticeitem.setFi_not_no(notice_no);
+    			
+    			File baseFile = this.files.get(i);
+    			
+    			String name = this.fileNames.get(i);
+    			
+    			List<String> contentType = noticeInfo.getFilesContentType();
+    			long size = baseFile.length();
+    			
+    			noticeitem.setFi_not_name(name);
+    			noticeitem.setFi_not_content_type(contentType.get(i));
+    			noticeitem.setFi_not_size(String.valueOf(size));
+    			
+    			String baseName = FilenameUtils.getBaseName(name);
+    			String extension = FilenameUtils.getExtension(name);
+    			
+    			String genID = UUID.randomUUID().toString().replace("-", "");
+    			
+    			this.fileSaveName = baseName + "-" + genID + "." + extension;
+    			
+    			noticeitem.setFi_not_save_name(this.fileSaveName);
+    			
+    			File saveFile = new File(GlobalConstant.FILE_PATH, this.fileSaveName);
+    			
+    			noticeList.add(noticeitem);
+    			if(baseFile.length() > 0){
+    				try{
+    					this.fileName = fileNames.get(i);
+    					FileUtils.copyFile(baseFile, saveFile);
+    				}catch(IOException e){
+    					e.printStackTrace();
+    				}
+    			}
+    		}
+    		
+    		this.noticeInfo.setNotice_savename(this.fileSaveName);
+    		
+    		service.insertNoticeInfo(this.noticeInfo);
+    		
+    		INoticeItemService itemService = INoticeItemServiceImpl.getInstance();
+    		itemService.insertNoticeItemInfo(noticeList);
+    		
+    		this.message = "게시글 작성 완료";
+    		return "success";
+    	
+    		}else{
+    			String notice_no = service.getnoticeSeq();
+    			
+    			noticeInfo.setNotice_no(notice_no);
+    			service.insertNoticeInfo(this.noticeInfo);
+    			
+    			this.message ="게시글 작성 완료";
+    			return "success";
+    		}
+		}
+		
+		
+		
+		
+	
+	@Override
+	public NoticeVO getModel() {
+		this.noticeInfo = new NoticeVO();
+		
+		return this.noticeInfo;
+	}
+	
+	public String getMessage(){
+		return message;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public String getFileSaveName() {
+		return fileSaveName;
+	}
+}

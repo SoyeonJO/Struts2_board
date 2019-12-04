@@ -1,0 +1,164 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src='http://code.jquery.com/jquery-latest.js'></script>
+<script type="text/javascript">
+$(function(){
+	$('#ref_no').val('${refInfo.ref_no}');
+	$('#ref_mem_id').val('${refInfo.ref_mem_id}');
+	$('#ref_nickname').val('${refInfo.ref_nickname}');
+ 	$('#ref_reg_date').val('${refInfo.ref_reg_date}');
+ 	$('#ref_title').val('${refInfo.ref_title}');
+ 	$('#ref_content').val('${refInfo.ref_content}');
+ 
+	
+	// 목록버튼
+	$('#list').click(function(){
+		if(eval('${!empty param.currentPage}')){
+			$(location).attr('href', '${pageContext.request.contextPath}/user/reference/refList.do?currentPage=${param.currentPage}&search_keyword=${param.search_keyword}&search_keycode=${param.search_keycode}');
+		}else{
+			$(location).attr('href', '${pageContext.request.contextPath}/user/reference/refList.do?search_keyword=${param.search_keyword}&search_keycode=${param.search_keycode}');
+		}
+	}); 
+   // 삭제버튼
+	$('#deletebtn').click(function(){
+	
+		var flag = redirectFlag();
+			if(flag){
+				$(location).attr('href', '${pageContext.request.contextPath}/user/reference/deleteRef.do?ref_no=${refInfo.ref_no}');
+			}
+			else{
+				alertPRT('해당 게시글은 작성자만 삭제할 수 있습니다.');
+			}	
+	
+	});
+
+   	$('form').submit(function(){
+   		$(this).append('<input type="hidden" name="ref_mem_id" value="${LOGIN_MEMBERINFO.mem_id}"></input>');
+   	});
+   	
+    $('#replybtn').click(function(){
+
+ 		var ref_title =$('#ref_title').val();
+    	var url = '${pageContext.request.contextPath}/user/reference/refReply.do';
+    	
+    	if(eval('${!empty LOGIN_MEMBERINFO}')){
+    		$(location).attr('href', url + '?rnum=${refInfo.rnum}&ref_title=' + ref_title + '&ref_group=${refInfo.ref_group}&ref_seq=${refInfo.ref_seq}&ref_depth=${refInfo.ref_depth}');
+		}
+    	else{
+			BootstrapDialog.show({
+			    title: '경고',
+			    message: '로그인해주세요.'
+			});
+		}
+    	
+    	
+    });
+   	
+});
+
+function alertPRT(msg){
+	BootstrapDialog.show({
+	    title: '경고',
+	    message: msg
+	});
+}
+function redirectFlag(){
+	if('${refInfo.ref_mem_id}' == 
+       	'${LOGIN_MEMBERINFO.mem_id}'){
+	return true;
+	}
+
+return false;
+}	
+</script>
+</head>
+<body>
+<div class="panel panel-black" style="background:#fff;">
+   <div class="panel-heading">자료실 상세</div>
+        <div class="panel-body pan">
+             <form action="${pageContext.request.contextPath}/user/reference/updateRef.do" method="post" id="rView">		
+            <div class="form-body pal">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                        <input id="ref_no" name="ref_no" type="hidden" placeholder="" class="form-control" value="${refInfo.ref_no }"/>
+        				<label for="inputSubject" class="control-label"> 제목</label>
+
+                            <div class="input-icon right">
+						<input id="ref_title" name="ref_title" type="text" placeholder="" class="form-control" value="${refInfo.ref_title }" />
+                        </div>
+                        </div> 
+                        </div> 
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ref_nickname" class="control-label">
+                                작성자</label>
+                            <div class="input-icon right">
+                                <input id="ref_nickname" name="ref_nickname" type="text" placeholder="" class="form-control" value="${refInfo.ref_nickname }" />
+                                </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ref_reg_date" class="control-label">작성일</label>
+                            <div class="input-icon right">
+                                <input readonly id="ref_reg_date" name="ref_reg_date" type="text" placeholder="" class="form-control" value="${refInfo.ref_reg_date }" />
+                                </div>
+                        </div>
+                    </div>
+                 </div>
+                     
+                <div class="form-group">
+                   <label for="ref_content" class="control-label"> 내용</label>
+            
+                        <textarea id="ref_content" name="ref_content" rows="5" class="form-control" value="${refInfo.ref_content }"></textarea>
+                        </div>
+              	  </div>
+
+			 <div class="form-group">
+				<label class="control-label col-sm-2" for="bo_content">첨부파일:</label>
+				<div id="myCarousel" class="carousel slide" data-ride="carousel">
+					<ol class="carousel-indicators">
+						<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+						<li data-target="#myCarousel" data-slide-to="1"></li>
+					</ol>
+			
+					 <div class="carousel-inner" role="listbox" style="width: 200px; height: 200px;">
+						<c:forEach items="${refInfo.items }" var="refitem" varStatus="stat">
+							<c:if test="${stat.first }">
+								<div class="item active">
+							</c:if>
+							<c:if test="${stat.last }">
+								<div class="item">
+							</c:if>
+<%-- 									<img src="/files/${refitem.fi_ref_save_name }" alt="pic2" onclick="javascript:location.href='${pageContext.request.contextPath}/user/reference/refItem.do?firefSEQ=${refitem.fi_ref_seq}';"> --%>
+								<img src="/files/${refitem.fi_ref_save_name }" alt="pic1" 
+												onclick="javascript:location.href='${pageContext.request.contextPath}/user/reference/refDownload.do?fileName=${refitem.fi_ref_save_name }';">
+								</div>
+						</c:forEach>
+					</div>
+					<!-- Left and right controls -->
+					<a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+					<a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+				</div> 
+					
+					
+					
+            <div class="form-actions text-right pal">
+                <button type="submit" class="btn btn-success">수정</button>
+				<button type="button" class="btn btn-danger" id="deletebtn">삭제</button>
+				<button type="button" class="btn btn-primary" id="replybtn">댓글</button>
+				<button type="button" class="btn btn-info" id="list">목록</button>
+            </div>
+            </form>
+        </div>
+</div>    
+</body>
+
+</html>

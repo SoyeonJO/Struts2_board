@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<!-- http://localhost/DrugStoreStruts/user/member/memberForm.do -->
+	<package name="memberUserPKG" extends="struts-default,tiles-default" namespace="/user/member">
+		<action name="memberForm">
+			<result type="tiles">user/member/memberForm</result>
+		</action>
+		
+		<action name="idCheck" class="kr.or.ddit.user.member.controller.IDCheckAction"></action>
+		
+		<action name="zipcodeSearchForm" class="kr.or.ddit.user.member.controller.ZipSearchAction"></action>
+		
+		<action name="insertMemberInfo" class="kr.or.ddit.user.member.controller.InsertMemberAction">
+			<interceptor-ref name="modelDriven"></interceptor-ref>
+			<interceptor-ref name="params"></interceptor-ref>
+			<result type="redirect">
+				<![CDATA[/user/join/loginForm.do?message=${message}]]>
+			</result>
+		</action>
+		
+		
+	</package>
+	
+</struts>

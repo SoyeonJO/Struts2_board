@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap 
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="adminMem">
+	<typeAlias alias="memberVO" type="kr.or.ddit.vo.MemberVO"/>
+	<typeAlias alias="zipVO" type="kr.or.ddit.vo.ZipCodeVO"/>
+	
+	<sql id="searchMember">
+		<dynamic prepend="AND">
+			<isNotEmpty property="search_base_keyword" open="(" close=")" prepend="OR">
+				<isEqual property="search_base" compareValue="search_name">
+					MEM_NAME LIKE '%'||#search_base_keyword#||'%'
+				</isEqual>
+				<isEqual property="search_base" compareValue="search_id">
+					MEM_ID LIKE '%'||#search_base_keyword#||'%'
+				</isEqual>
+			</isNotEmpty>
+			<isNotEmpty property="search_sido"  open="(" close=")" prepend="OR">
+				MEM_ADDR1 LIKE '%'||#search_sido#||'%'				
+				<isNotEmpty property="search_gugun" prepend="AND">
+					MEM_ADDR1 LIKE '%'||#search_gugun#||'%'
+				</isNotEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="search_hp" prepend="OR" open="(" close=")">
+				MEM_TEL LIKE '%'||#search_hp#||'%'
+			</isNotEmpty>		
+			<isNotEmpty property="search_birth" prepend="OR" open="(" close=")">
+				MEM_BIRTH LIKE '%'||#search_birth#||'%'
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	
+	<sql id="memberSelectAll">
+		SELECT *
+		  FROM MEMBER
+		 WHERE MEM_STATUS = 'y' 
+	</sql>
+		
+	<select id="memberList" parameterClass="map" resultClass="memberVO">
+		SELECT B.*
+  		  FROM (SELECT ROWNUM RNUM, A.*
+          	  	  FROM (<include refid="memberSelectAll"/>
+                   		   <include refid="searchMember"/>
+                  		 ORDER BY MEM_ID) A ) B
+         <![CDATA[         		 
+ 	     WHERE B.RNUM <= #startCount#
+           AND B.RNUM >= #endCount#
+         ]]>  
+ 	     ORDER BY B.RNUM
+	</select>
+	
+	<select id="totalCountMember" parameterClass="map" resultClass="string">
+		SELECT COUNT(*)
+		  FROM MEMBER
+		 WHERE MEM_STATUS = 'y'
+		 <include refid="searchMember"/> 
+	</select>
+	
+	<select id="memberInfo" parameterClass="map" resultClass="memberVO">
+		SELECT *
+		  FROM MEMBER
+		 WHERE MEM_ID = #mem_id# 
+		 <dynamic>
+		 	<isNotEmpty property="mem_pass" prepend="AND"> 
+		 		MEM_PASS= #mem_pass#
+		 	</isNotEmpty>
+		 </dynamic>
+	</select>
+	
+	<update id="updateMember" parameterClass="memberVO">
+		UPDATE MEMBER
+		   SET MEM_PASS    = #mem_pass# 
+			  ,MEM_TEL      = #mem_tel#
+			  ,MEM_BIRTH      = #mem_birth#
+			  ,MEM_MAIL    = #mem_mail#
+			  ,MEM_ADDR1    = #mem_addr1#
+		 WHERE MEM_ID = #mem_id#  
+	</update>
+
+	<delete id="deleteMember" parameterClass="map">
+		UPDATE MEMBER
+		   SET MEM_STATUS = 'n'
+		 WHERE MEM_ID = #mem_id#  
+	</delete>
+
+</sqlMap>        

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="freeboardPKG" extends="struts-default,tiles-default" namespace="/user/freeboard">
+	
+		<action name="freeboardList" class="kr.or.ddit.user.freeboard.controller.FreeboardListAction">
+			<result  type="tiles">user/freeboard/freeboardList</result>
+		</action>
+		
+		<action name="freeboardView" class="kr.or.ddit.user.freeboard.controller.FreeboardViewAction" method="freeboardInfo">
+			<result type="tiles">user/freeboard/freeboardView</result>
+		</action>
+		
+		<action name="freeboardForm">
+			<result type="tiles">user/freeboard/freeboardForm</result>
+		</action>
+		
+		<action name="updatefreeboardInfo" class="kr.or.ddit.user.freeboard.controller.updateFreeboardAction">
+		    <interceptor-ref name ="modelDriven"></interceptor-ref>
+		    <interceptor-ref name ="params"></interceptor-ref>
+		     <result type ="redirectAction">
+		                <param name ="namespace">/user/freeboard</param>
+		                <param name ="actionName">freeboardList</param>
+		     </result>
+		</action>
+		<action name="deletefreeboardInfo" class="kr.or.ddit.user.freeboard.controller.deleteFreeboardAction">
+		    <interceptor-ref name ="modelDriven"></interceptor-ref>
+		    <interceptor-ref name ="params"></interceptor-ref>
+		     <result type ="redirectAction">
+		                <param name ="namespace">/user/freeboard</param>
+		                <param name ="actionName">freeboardList</param>
+		     </result>
+		</action>								
+		<action name="insertfreeboardInfo" class="kr.or.ddit.user.freeboard.controller.insertFreeboardAction" method="fileUploadMethod">
+		    <interceptor-ref name="fileUpload"></interceptor-ref>
+		    <interceptor-ref name ="modelDriven"></interceptor-ref>
+		    <interceptor-ref name ="params"></interceptor-ref>
+		     <result type="redirectAction">
+		                <param name="namespace">/user/freeboard</param>
+		                <param name="actionName">freeboardList</param>
+		     </result>
+		</action>
+		
+	<!-- 	<action name="UploadInfo" class="kr.or.ddit.user.freeboard.controller.UploadAction">
+		     <result type ="redirectAction">
+		                <param name ="namespace">/user/freeboard</param>
+		                <param name ="actionName">freeboardList</param>
+		     </result>
+		</action>
+		
+		<action name="DownloadInfo" class="kr.or.ddit.user.freeboard.controller.DownloadAction">
+		   <result type="tiles">user/freeboard/freeboardView</result>
+		</action>
+		 -->
+
+
+	  <action name="replyInfo" class="kr.or.ddit.user.freeboard.controller.FreeboardReplyFormAction" >
+	    <interceptor-ref name ="modelDriven"></interceptor-ref>
+		    <interceptor-ref name ="params"></interceptor-ref>
+		     <result type="tiles">user/freeboard/freeboardReplyBoardForm</result>
+		</action>
+	  <action name="insertReplyInfo" class="kr.or.ddit.user.freeboard.controller.FreeboardReplyFormAction"  method="replyinsert" >
+	    <interceptor-ref name ="modelDriven"></interceptor-ref>
+		    <interceptor-ref name ="params"></interceptor-ref>
+		     <result type="redirectAction">
+		                <param name="namespace">/user/freeboard</param>
+		                <param name="actionName">freeboardList</param>
+		     </result>
+		</action>
+		
+		
+		
+		<action name="downlaodfree" class="kr.or.ddit.user.freeboard.controller.downloadFreeboardAction" method="fileDownloadMethod">
+			<result type="stream">
+				<param name="contentType">binary/octet-stream</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">${contentDisposition}</param>
+				<param name="contentLength">${contentLength}</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>
+	
+		
+	</package>
+	
+	
+	
+	
+
+</struts>

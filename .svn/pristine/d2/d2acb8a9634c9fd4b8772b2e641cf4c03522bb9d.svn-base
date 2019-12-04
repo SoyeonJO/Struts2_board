@@ -1,0 +1,30 @@
+package kr.or.ddit.user.reference.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.user.reference.service.IRefService;
+import kr.or.ddit.user.reference.service.IRefServiceImpl;
+import kr.or.ddit.vo.RefVO;
+
+public class RefListAction {
+	
+	private List<RefVO> refList;
+	
+
+	public String execute(){
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("startCount", "5");
+		params.put("endCount", "1");
+		IRefService service = IRefServiceImpl.getInstance();
+		this.refList = service.refList(params);
+		
+		return "success";
+	}
+	
+	public List<RefVO> getRefList() {
+		return refList;
+	}
+}

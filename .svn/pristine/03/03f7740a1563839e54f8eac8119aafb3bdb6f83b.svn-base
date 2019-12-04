@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+	<package name="noticePKG" extends="struts-default,tiles-default" namespace="/user/notice">
+	
+		<action name="noticeList" class="kr.or.ddit.user.notice.controller.NoticeListAction">
+			<result type="tiles">user/notice/noticeList</result>
+		</action>
+
+		<action name="noticeView" class="kr.or.ddit.user.notice.controller.NoticeViewAction" method="noticeInfo">
+			<result type="tiles">user/notice/noticeView</result>
+		</action>
+
+		<action name="updateNoticeInfo" class="kr.or.ddit.user.notice.controller.NoticeUpdateAction">
+			<interceptor-ref name="modelDriven"></interceptor-ref>
+			<interceptor-ref name="params"></interceptor-ref>
+			<result type="redirectAction">
+				<param name="namespace">/user/notice</param>
+				<param name="actionName">noticeList</param>
+			</result>
+		</action>
+
+		<action name="deleteNoticeInfo" class="kr.or.ddit.user.notice.controller.NoticeDeleteAction">
+			<interceptor-ref name="modelDriven"></interceptor-ref>
+			<interceptor-ref name="params"></interceptor-ref>
+			<result type="redirectAction">
+				<param name="namespace">/user/notice</param>
+				<param name="actionName">noticeList</param>
+			</result>
+		</action> 
+		
+	</package>
+</struts>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap 
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="thumbnailitem">
+	<typeAlias alias="tbiVO" type="kr.or.ddit.vo.ThumbnailItemVO" />
+	
+	<statement id="thumbnailItemList" resultClass="tbiVO">
+		SELECT *
+		  FROM THUMBNAILITEM
+		 WHERE TBI_TB_NO = #tb_no# 
+	</statement>
+
+	<insert id="insertThumbnailItem" parameterClass="tbiVO">
+		<selectKey keyProperty="tbi_seq" resultClass="String">
+			SELECT THUMBNAILITEM_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO THUMBNAILITEM (TBI_SEQ, TBI_TB_NO, TBI_NAME, TBI_SAVE_NAME, TBI_CONTENT_TYPE, TBI_SIZE)
+		VALUES (#tbi_seq#, #tbi_tb_no#, #tbi_name#, #tbi_save_name#, #tbi_content_type#, #tbi_size#)
+	</insert>
+	
+	<select id="thumbnailItemInfo" parameterClass="map" resultClass="tbiVO">
+		SELECT *
+		  FROM THUMBNAILITEM
+		 WHERE TBI_TB_NO = #tb_no#
+		   and TBI_SEQ = #tbi_seq# 
+	</select>
+</sqlMap>    

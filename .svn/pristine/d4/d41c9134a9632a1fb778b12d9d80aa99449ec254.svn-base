@@ -1,0 +1,36 @@
+package kr.or.ddit.admin.board.controller;
+
+import com.opensymphony.xwork2.ModelDriven;
+
+import kr.or.ddit.admin.board.service.FreeboardServiceImpl;
+import kr.or.ddit.admin.board.service.IfreeboardService;
+import kr.or.ddit.vo.FreeboardVO;
+
+public class FreeboardReplyFormAction implements ModelDriven<FreeboardVO>{
+	
+	private FreeboardVO freeboardInfo;
+		
+	   public String replyinsert(){
+	    	
+		    IfreeboardService service = FreeboardServiceImpl.getInstance();
+		
+			service.insertReInfo(freeboardInfo);	
+			
+			return "success";
+		 }
+
+	@Override
+	public FreeboardVO getModel() {
+
+	this.freeboardInfo = new FreeboardVO();
+	
+		return this.freeboardInfo;
+	}
+	 
+   public String execute(){
+	   
+	   return "success";
+   }	
+	 
+	   
+}

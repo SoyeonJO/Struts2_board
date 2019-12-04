@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<!-- 외부에 존재하는 스트럿츠 설정파일을 레퍼런스 -->
+	<include file="kr/or/ddit/struts/config/common.xml"></include>	 
+ 	<include file="kr/or/ddit/struts/config/common.xml"></include>	  
+    <include file="kr/or/ddit/struts/config/joinAdmin.xml"></include>  
+ 	<include file="kr/or/ddit/struts/config/memberAdmin.xml"></include>  
+ 	<include file="kr/or/ddit/struts/config/freeboard.xml"></include> 
+ 	<include file="kr/or/ddit/struts/config/common.xml"></include>	 
+    <include file="kr/or/ddit/struts/config/joinAdmin.xml"></include> 
+	<include file="kr/or/ddit/struts/config/memberAdmin.xml"></include> 
+	<include file="kr/or/ddit/struts/config/freeboard.xml"></include>
+    <include file="kr/or/ddit/struts/config/joinUser.xml"></include> 
+	<include file="kr/or/ddit/struts/config/memberUser.xml"></include> 
+  	<include file="kr/or/ddit/struts/config/reference.xml"></include>  
+  	<include file="kr/or/ddit/struts/config/thumbnailUser.xml"></include> 
+ 	<include file="kr/or/ddit/struts/config/thumbnailAdmin.xml"></include> 
+ 	<include file="kr/or/ddit/struts/config/notice.xml"></include>
+ 	<include file="kr/or/ddit/struts/config/noticeitem.xml"></include> 
+	<include file="kr/or/ddit/struts/config/notice.xml"></include>
+ 	<include file="kr/or/ddit/struts/config/noticeitem.xml"></include>
+ 	<include file="kr/or/ddit/struts/config/Adminfreeboard.xml"></include>
+ 	<include file="kr/or/ddit/struts/config/statisticsAdmin.xml"></include>
+	<include file="kr/or/ddit/struts/config/referenceAdmin.xml"></include>
+</struts>
